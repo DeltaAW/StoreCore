@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ЧТО_ТО1
+namespace StoreCore
 {
     static class InputClass
     { 
@@ -10,6 +10,7 @@ namespace ЧТО_ТО1
         {
             string input;
 
+            // Повторяем чтение, пока пользователь не введёт хотя бы один символ.
             while (true)
             {
                 input = Console.ReadLine();

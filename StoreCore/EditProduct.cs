@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ЧТО_ТО1
+namespace StoreCore
 {
+    // Методы этого класса управляют списком товаров и взаимодействуют с пользователем через консоль.
     internal class EditProduct
     {
+        // Список общий для всех объектов EditProduct, потому что свойство объявлено static.
         public static List<string> Products { get; set; } = new();
 
 
@@ -16,6 +18,7 @@ namespace ЧТО_ТО1
 
         public void ShowProducts()
         {
+            // Отдельно обрабатываем пустой список, чтобы не выводить пустой перечень.
             if (Products == null || Products.Count == 0)
             {
                 Console.Clear();
@@ -41,6 +44,7 @@ namespace ЧТО_ТО1
         public void AddProduct()
         {
             string Addinput;
+            // Можно добавлять товары несколько раз подряд; ввод back завершает этот режим.
             while (true)
             {
                 Console.Clear();
@@ -56,6 +60,7 @@ namespace ЧТО_ТО1
                 }
                 else
                 {
+                    // Считаем пробел, запятую и точку разделителями отдельных названий товаров.
                     Products.AddRange(Addinput.Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries));
                 }
             }
@@ -65,6 +70,7 @@ namespace ЧТО_ТО1
             string RemoveInput;
             string[] RemoveArray;
 
+            // Режим удаления повторяется, пока пользователь не введёт back.
             while (true)
             {
                 Console.Clear();
@@ -74,6 +80,7 @@ namespace ЧТО_ТО1
                 Console.WriteLine("Введите название товара для удаления: ");
 
                 RemoveInput = InputClass.Input();
+                // Разделяем введённую строку, чтобы обработать каждое название отдельно.
                 RemoveArray = RemoveInput.Split(' ', ',', '.');
 
                 for (int x = 0; x != RemoveArray.Length; x++)

@@ -1,28 +1,59 @@
-﻿using ЧТО_ТО1;
+﻿using StoreCore;
 
 public class Program
 {
     EditProduct edit = new EditProduct();
 
+    // Числа соответствуют номерам пунктов, которые видит пользователь в главном меню.
+    enum MenuMain
+    {
+        ShowProducts = 1,
+        EditProducts = 2,
+        Exit = 3,
+    }
+
+    // Отдельные пункты меню редактирования, их номера могут совпадать с главным меню.
+    enum MenuEdit
+    {
+        Add = 1,
+        Remove = 2,
+        Back = 3,
+    }
+
     public static void Main(string[] args)
     {
+        // Main статический, поэтому создаём объект для доступа к полю edit и методу EditMenu.
         Program program = new Program();
 
         string input;
 
+        // Главное меню повторяется, пока пользователь не выберет выход.
         while (true)
         {
             Console.Clear();
-            Console.WriteLine("1) просмотр имеющихся товаров\n2) Редактирование товаров\n3) Выход");            
-            switch (InputClass.Input())
+            Console.WriteLine("1) просмотр имеющихся товаров\n2) Редактирование товаров\n3) Выход");
+
+            input = InputClass.Input();
+            // Проверяем, что ввод — число в диапазоне пунктов меню: приведение к enum само это не проверяет.
+            if (!int.TryParse(input, out int number) || number > 3 || number < 1)
             {
-                case "1":
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Неверное значение. Нажмите любую кнопку, чтобы продолжить");
+                Console.ResetColor();
+                Console.ReadLine();                
+                continue;
+            }
+
+            switch ((MenuMain)number)
+            {
+                case MenuMain.ShowProducts:
                     program.edit.ShowProducts();
                     break;
-                case "2":
+                case MenuMain.EditProducts:
                     program.EditMenu();
                     break;
-                case "3":
+                case MenuMain.Exit:
                     return;
                 default:
                     Console.Clear();
@@ -36,17 +67,34 @@ public class Program
     }   
     public void EditMenu()
     {
+
+        string input;
+
+        // Меню редактирования повторяется, пока пользователь не выберет «Назад».
         while (true)
         {
             Console.Clear();
             Console.WriteLine("1) Добавить товар\n2) Удалить товар\n3) Назад");
 
-            switch (InputClass.Input())
+            input = InputClass.Input();
+            // Проверяем, что ввод — число в диапазоне пунктов меню: приведение к enum само это не проверяет.
+            if (!int.TryParse(input, out int number) || number > 3 || number < 1)
             {
-                case "1":
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Неверное значение. Нажмите любую кнопку, чтобы продолжить");
+                Console.ResetColor();
+                Console.ReadLine();
+                continue;
+            }
+
+            switch ((MenuEdit)number)
+            {
+                case MenuEdit.Add:
                     edit.AddProduct();
                     break;
-                case "2":
+                case MenuEdit.Remove:
+                    // Удалять нечего, если список товаров пуст.
                     if (EditProduct.Products.Count == 0)
                     {
                         Console.Clear();
@@ -61,7 +109,7 @@ public class Program
                         edit.RemoveProduct();
                     }
                     break;
-                case "3":
+                case MenuEdit.Back:
                     return;
                 default:
                     Console.ForegroundColor = ConsoleColor.Red;
