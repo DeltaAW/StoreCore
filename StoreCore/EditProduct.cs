@@ -8,7 +8,7 @@ namespace StoreCore
     internal class EditProduct
     {
         // Список общий для всех объектов EditProduct, потому что свойство объявлено static.
-        public static List<string> Products { get; set; } = new();
+        public static List<ListProducts> Products { get; set; } = new();
 
 
         //public Program(string products) в будущем пригодится
@@ -31,10 +31,10 @@ namespace StoreCore
             {
                 Console.Clear();
                 Console.WriteLine("Список товаров:");
-                foreach (string product in Products)
+                foreach (ListProducts product in Products)
                 {
                     Console.ForegroundColor = ConsoleColor.Blue;
-                    Console.WriteLine(product);
+                    Console.WriteLine(product.Name);
                     Console.ResetColor();
                 }
                 Console.WriteLine("Нажмите любую клавишу для возврата в главное меню.");
@@ -43,7 +43,9 @@ namespace StoreCore
         }
         public void AddProduct()
         {
-            string Addinput;
+            string[] names;
+            string backButton; // заранее присваиваю значение, чтобы избежать ошибки компеляции
+
             // Можно добавлять товары несколько раз подряд; ввод back завершает этот режим.
             while (true)
             {
@@ -53,22 +55,33 @@ namespace StoreCore
                 Console.ResetColor();
                 Console.WriteLine("Введите название товаров: ");
 
-                Addinput = InputClass.Input();
-                if (Addinput == "back")
+                names = InputClass.Input().Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries);
+                backButton = "no values";
+
+
+                foreach (string name in names)
+                {
+                    if (name == "back")
+                    {
+                        backButton = "back";
+                    }
+                    else
+                    {
+                        // Считаем пробел, запятую и точку разделителями отдельных названий товаров.
+                        Products.Add(new ListProducts(name));
+                    }
+                }
+                if (backButton == "back")
                 {
                     return;
-                }
-                else
-                {
-                    // Считаем пробел, запятую и точку разделителями отдельных названий товаров.
-                    Products.AddRange(Addinput.Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries));
                 }
             }
         }
         public void RemoveProduct()
         {
-            string RemoveInput;
-            string[] RemoveArray;
+            string[] removeArray;
+            string backButton; // заранее присваиваю значение, чтобы избежать ошибки компеляции            
+            int index;
 
             // Режим удаления повторяется, пока пользователь не введёт back.
             while (true)
@@ -79,20 +92,38 @@ namespace StoreCore
                 Console.ResetColor();
                 Console.WriteLine("Введите название товара для удаления: ");
 
-                RemoveInput = InputClass.Input();
                 // Разделяем введённую строку, чтобы обработать каждое название отдельно.
-                RemoveArray = RemoveInput.Split(' ', ',', '.');
+                removeArray = InputClass.Input().Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries);
+                int arrayIndex = 0;
+                backButton = "no values";
 
-                for (int x = 0; x != RemoveArray.Length; x++)
+                while (arrayIndex < removeArray.Length)
                 {
-                    if (RemoveInput != "back")
+                    // программа запишет желание пользователя в отдельную переменную
+                    if (removeArray[arrayIndex] == "back")
                     {
-                        Products.Remove(RemoveArray[x]);
+                        backButton = removeArray[arrayIndex];
                     }
+                    // сначало программа проверит все аргументы находящиеся в массиве
+                    else if ((index = Products.FindIndex(Products => Products.Name == removeArray[arrayIndex])) != -1)
+                    {
+                        Products.RemoveAt(index);
+                    }
+                    // программа удаляет совпадения
                     else
                     {
-                        return;
+                        Console.Clear();
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Обьект не найден: " + removeArray[arrayIndex] + " нажмите любую кнопку, чтобы продолжить: ");
+                        Console.ResetColor();
+                        Console.ReadKey();
                     }
+                    arrayIndex++;
+                }
+                // программа выходит обратно в меню только после того как все обьекты были удалены из обьекта Products 
+                if (backButton == "back")
+                {
+                    return;
                 }
             }
         }

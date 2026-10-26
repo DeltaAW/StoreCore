@@ -14,7 +14,7 @@ namespace StoreCore
             while (true)
             {
                 input = Console.ReadLine();
-                if (input != "")
+                if (!string.IsNullOrWhiteSpace(input))
                 {
                     return input;
                 }

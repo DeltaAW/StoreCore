@@ -41,7 +41,7 @@ public class Program
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Неверное значение. Нажмите любую кнопку, чтобы продолжить");
                 Console.ResetColor();
-                Console.ReadLine();                
+                Console.ReadKey();         
                 continue;
             }
 
@@ -84,7 +84,7 @@ public class Program
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Неверное значение. Нажмите любую кнопку, чтобы продолжить");
                 Console.ResetColor();
-                Console.ReadLine();
+                Console.ReadKey();
                 continue;
             }
 
